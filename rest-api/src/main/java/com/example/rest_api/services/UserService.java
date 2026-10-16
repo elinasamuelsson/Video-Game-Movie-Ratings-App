@@ -12,10 +12,6 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User registerUser(User user) {
-        return userRepository.save(new User(user.getUsername(), user.getPasswordHash()));
-    }
-
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
