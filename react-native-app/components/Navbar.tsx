@@ -1,0 +1,38 @@
+import {View, Pressable, Text, StyleSheet} from "react-native";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
+
+import {navigationRef} from "../hooks/navigationRef";
+import {useThemedStyles} from "../hooks/useTheme";
+import {Size, Theme} from "../constants/theme";
+
+const createStyles = (theme: Theme) =>
+	StyleSheet.create({
+		bar: {
+			backgroundColor: theme.surface,
+			position: "absolute",
+			left: Size.large,
+			right: Size.large,
+			height: Size.xxLarge,
+			borderRadius: Size.large,
+			flexDirection: "row",
+			justifyContent: "space-around",
+			alignItems: "center",
+			elevation: Size.medium,
+		},
+		text: {
+			color: theme.textMuted,
+		},
+	});
+
+export default function Navbar() {
+	const styles = useThemedStyles(createStyles);
+	const insets = useSafeAreaInsets();
+
+	return (
+		<View style={[styles.bar, {bottom: insets.bottom + 8}]}>
+			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}>
+				<Text style={styles.text}>Home</Text>
+			</Pressable>
+		</View>
+	);
+}
