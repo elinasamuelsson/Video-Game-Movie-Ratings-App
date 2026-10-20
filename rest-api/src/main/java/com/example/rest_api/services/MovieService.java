@@ -16,8 +16,4 @@ public class MovieService {
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
-
-    public Movie getSingleMovie(UUID id) {
-        return movieRepository.getMovieById(id);
-    }
 }
