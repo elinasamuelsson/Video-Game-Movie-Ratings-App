@@ -2,9 +2,8 @@ import {Text, View, StyleSheet, Pressable} from "react-native";
 
 import {ColorTheme, Size} from "../constants/theme";
 import {useThemedStyles} from "../hooks/useTheme";
-import {NativeStackNavigationProp, NativeStackScreenProps} from "@react-navigation/native-stack";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {RootStackParamList} from "../App";
-import {useNavigation} from "@react-navigation/native";
 import {navigationRef} from "../hooks/navigationRef";
 
 const createStyles = (theme: ColorTheme) =>
@@ -13,7 +12,7 @@ const createStyles = (theme: ColorTheme) =>
 			backgroundColor: theme.background,
 			flex: 1,
 			alignItems: "center",
-			justifyContent: "center",
+			justifyContent: "space-evenly",
 		},
 		text: {
 			color: theme.text,

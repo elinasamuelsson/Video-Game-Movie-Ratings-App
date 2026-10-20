@@ -4,6 +4,7 @@ import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {navigationRef} from "../hooks/navigationRef";
 import {useThemedStyles} from "../hooks/useTheme";
 import {Size, ColorTheme} from "../constants/theme";
+import {userIsSignedIn} from "../context/authContext";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -28,6 +29,8 @@ export default function Navbar() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
 
+	const isSignedIn = userIsSignedIn();
+
 	return (
 		<View style={[styles.bar, {bottom: insets.bottom + 8}]}>
 			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}>
@@ -36,9 +39,11 @@ export default function Navbar() {
 			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Movies")}>
 				<Text style={styles.text}>Movies</Text>
 			</Pressable>
-			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Profile")}>
-				<Text style={styles.text}>Profile</Text>
-			</Pressable>
+			{isSignedIn && (
+				<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Profile")}>
+					<Text style={styles.text}>Profile</Text>
+				</Pressable>
+			)}
 		</View>
 	);
 }

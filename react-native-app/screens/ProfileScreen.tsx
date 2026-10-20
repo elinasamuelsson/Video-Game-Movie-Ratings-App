@@ -4,6 +4,7 @@ import * as SecureStore from "expo-secure-store";
 import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
 import {useAuth} from "../context/authContext";
+import {SafeAreaInsetsContext, useSafeAreaInsets} from "react-native-safe-area-context";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -11,7 +12,10 @@ const createStyles = (theme: ColorTheme) =>
 			backgroundColor: theme.background,
 			flex: 1,
 			alignItems: "center",
-			justifyContent: "center",
+			justifyContent: "space-evenly",
+		},
+		text: {
+			color: theme.text,
 		},
 		button: {
 			backgroundColor: theme.secondary,
@@ -29,6 +33,7 @@ const createStyles = (theme: ColorTheme) =>
 
 export default function ProfileScreen() {
 	const styles = useThemedStyles(createStyles);
+	const insets = useSafeAreaInsets();
 	const {signOut} = useAuth();
 
 	async function logout() {
@@ -56,7 +61,11 @@ export default function ProfileScreen() {
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, {paddingTop: insets.top}, {paddingBottom: insets.bottom + 80}]}>
+			<View>
+				<Text style={styles.text}>User details</Text>
+				<Text style={styles.text}>User posted reviews</Text>
+			</View>
 			<Pressable style={styles.button} onPress={logout}>
 				<Text style={styles.buttonText}>Logout</Text>
 			</Pressable>

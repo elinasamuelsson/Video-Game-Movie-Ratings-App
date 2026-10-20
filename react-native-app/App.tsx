@@ -29,7 +29,6 @@ const RootStack = createNativeStackNavigator<RootStackParamList>({
 	},
 	screens: {
 		Home: {
-			if: userIsSignedIn,
 			screen: HomeScreen,
 		},
 		Login: {
@@ -47,6 +46,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>({
 			screen: MoviesScreen,
 		},
 		Movie: {
+			if: userIsSignedIn,
 			screen: MovieScreen,
 		},
 	},
@@ -56,14 +56,13 @@ const Navigation = createStaticNavigation(RootStack);
 
 function Root() {
 	const {isLoading} = useAuth();
-	const isSignedIn = userIsSignedIn();
 
 	if (isLoading) return null;
 
 	return (
 		<>
 			<Navigation ref={navigationRef} />
-			{isSignedIn && <Navbar />}
+			<Navbar />
 		</>
 	);
 }
