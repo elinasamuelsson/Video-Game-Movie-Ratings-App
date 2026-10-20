@@ -21,6 +21,7 @@ public class Movie {
     private String title;
     private String plot;
     private String posterImage;
+    private String type;
     private ArrayList<String> genres;
     private ArrayList<String> directors;
     private ArrayList<String> writers;
