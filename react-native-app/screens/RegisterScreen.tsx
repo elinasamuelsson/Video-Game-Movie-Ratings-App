@@ -2,10 +2,11 @@ import {useState} from "react";
 
 import {StyleSheet, Text, TextInput, View, Pressable} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {StackActions, useNavigation} from "@react-navigation/native";
+import {useNavigation} from "@react-navigation/native";
 
 import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
+import {navigationRef} from "../hooks/navigationRef";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -44,8 +45,8 @@ export default function RegisterScreen() {
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
 
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+	const [username, setUsername] = useState<String>("");
+	const [password, setPassword] = useState<String>("");
 
 	async function submitRegisterDetails() {
 		try {
@@ -59,7 +60,7 @@ export default function RegisterScreen() {
 
 			const data = await response.text();
 			if (response.ok) {
-				navigation.dispatch(StackActions.replace("Login"));
+				navigationRef.navigate("Login");
 			} else {
 				console.error(data);
 			}
