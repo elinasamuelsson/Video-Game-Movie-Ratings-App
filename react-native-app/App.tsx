@@ -2,15 +2,28 @@ import {createStaticNavigation} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 
-import HomeScreen from "./screens/HomeScreen";
-import Navbar from "./components/Navbar";
 import {navigationRef} from "./hooks/navigationRef";
 import {AuthProvider, useAuth, userIsSignedIn, userIsSignedOut} from "./context/authContext";
+import Navbar from "./components/Navbar";
+
+import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import MoviesScreen from "./screens/MoviesScreen";
+import MovieScreen from "./screens/MovieScreen";
+import {Movie} from "./types/movie";
 
-const RootStack = createNativeStackNavigator({
+export type RootStackParamList = {
+	Home: undefined;
+	Login: undefined;
+	Register: undefined;
+	Profile: undefined;
+	Movies: undefined;
+	Movie: {movie: Movie};
+};
+
+const RootStack = createNativeStackNavigator<RootStackParamList>({
 	screenOptions: {
 		headerShown: false,
 	},
@@ -30,13 +43,19 @@ const RootStack = createNativeStackNavigator({
 			if: userIsSignedIn,
 			screen: ProfileScreen,
 		},
+		Movies: {
+			screen: MoviesScreen,
+		},
+		Movie: {
+			screen: MovieScreen,
+		},
 	},
 });
 
 const Navigation = createStaticNavigation(RootStack);
 
 function Root() {
-	const {isLoading, token} = useAuth();
+	const {isLoading} = useAuth();
 	const isSignedIn = userIsSignedIn();
 
 	if (isLoading) return null;

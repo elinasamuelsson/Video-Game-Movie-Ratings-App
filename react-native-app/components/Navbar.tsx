@@ -33,6 +33,9 @@ export default function Navbar() {
 			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}>
 				<Text style={styles.text}>Home</Text>
 			</Pressable>
+			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Movies")}>
+				<Text style={styles.text}>Movies</Text>
+			</Pressable>
 			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Profile")}>
 				<Text style={styles.text}>Profile</Text>
 			</Pressable>
