@@ -3,9 +3,9 @@ import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 import {navigationRef} from "../hooks/navigationRef";
 import {useThemedStyles} from "../hooks/useTheme";
-import {Size, Theme} from "../constants/theme";
+import {Size, ColorTheme} from "../constants/theme";
 
-const createStyles = (theme: Theme) =>
+const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
 		bar: {
 			backgroundColor: theme.surface,
@@ -32,6 +32,9 @@ export default function Navbar() {
 		<View style={[styles.bar, {bottom: insets.bottom + 8}]}>
 			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}>
 				<Text style={styles.text}>Home</Text>
+			</Pressable>
+			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Profile")}>
+				<Text style={styles.text}>Profile</Text>
 			</Pressable>
 		</View>
 	);

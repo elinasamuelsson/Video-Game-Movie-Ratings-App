@@ -22,12 +22,12 @@ export function AuthProvider({children}: {children: ReactNode}) {
 	}, []);
 
 	const signIn = useCallback(async (newToken: string) => {
-		await SecureStore.setItemAsync("token", newToken);
+		await SecureStore.setItemAsync("sessionToken", newToken);
 		setToken(newToken);
 	}, []);
 
 	const signOut = useCallback(async () => {
-		await SecureStore.deleteItemAsync("token");
+		await SecureStore.deleteItemAsync("sessionToken");
 		setToken(null);
 	}, []);
 
@@ -40,5 +40,5 @@ export function useAuth() {
 	return context;
 }
 
-export const useIsSignedIn = () => useAuth().token !== null;
-export const useIsSignedOut = () => useAuth().token === null;
+export const userIsSignedIn = () => useAuth().token !== null;
+export const userIsSignedOut = () => useAuth().token === null;

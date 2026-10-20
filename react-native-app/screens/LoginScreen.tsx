@@ -7,6 +7,7 @@ import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {StackActions, useNavigation} from "@react-navigation/native";
+import {useAuth} from "../context/authContext";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -44,6 +45,7 @@ export default function LoginScreen() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
+	const {signIn} = useAuth();
 
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -61,15 +63,18 @@ export default function LoginScreen() {
 			});
 
 			const data = await response.text();
-			if (response.ok) {
-				await SecureStore.setItemAsync("sessionToken", data);
-				navigation.dispatch(StackActions.replace("Home"));
+			if (response.ok && data) {
+				await signIn(data);
 			} else {
 				console.error(data);
 			}
 		} catch (error) {
 			console.error(error);
 		}
+	}
+
+	function navigateToRegister() {
+		navigation.dispatch(StackActions.replace("Register"));
 	}
 
 	return (
@@ -97,7 +102,7 @@ export default function LoginScreen() {
 					<Text style={styles.buttonText}>Login</Text>
 				</Pressable>
 			</View>
-			<Pressable style={styles.button}>
+			<Pressable style={styles.button} onPress={navigateToRegister}>
 				<Text style={styles.buttonText}>Register</Text>
 			</Pressable>
 		</View>
