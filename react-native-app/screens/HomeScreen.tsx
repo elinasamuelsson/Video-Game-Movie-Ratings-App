@@ -11,7 +11,7 @@ const createStyles = (theme: ColorTheme) =>
 			backgroundColor: theme.background,
 			flex: 1,
 			alignItems: "center",
-			justifyContent: "center",
+			justifyContent: "space-evenly",
 		},
 		text: {
 			color: theme.text,
@@ -45,7 +45,7 @@ export default function LoginScreen() {
 
 	return (
 		<View style={[styles.container]}>
-			<Text style={styles.text}>Welcome!</Text>
+			<Text style={styles.text}>Welcome to the Video Game Movie Library</Text>
 			{!isSignedIn && (
 				<View>
 					<Pressable style={styles.button} onPress={navigateToLogin}>
