@@ -43,9 +43,11 @@ export default function MoviesScreen() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
 
+	const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
 	async function fetchMovies(): Promise<Movie[]> {
 		try {
-			const response = await fetch("http://192.168.50.248:8080/api/movies", {
+			const response = await fetch(`${API_URL}/api/movies`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
