@@ -17,13 +17,13 @@ public class ReviewController {
     public final ReviewService reviewService;
 
     @GetMapping("/movie")
-    public ResponseEntity<List<Review>> getAllReviewsForMovie(@RequestBody UUID movieId) {
+    public ResponseEntity<List<Review>> getAllReviewsForMovie(@RequestParam UUID movieId) {
         List<Review> response = reviewService.getAllReviewsForMovie(movieId);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<Review>> getAllReviewsForUser(@RequestBody UUID userId) {
+    public ResponseEntity<List<Review>> getAllReviewsForUser(@RequestParam UUID userId) {
         List<Review> response = reviewService.getAllReviewsForUser(userId);
         return ResponseEntity.ok().body(response);
     }
