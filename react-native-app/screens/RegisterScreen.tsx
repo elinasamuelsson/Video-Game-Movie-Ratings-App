@@ -1,12 +1,16 @@
 import {useState} from "react";
 
-import {StyleSheet, Text, TextInput, View, Pressable} from "react-native";
+import {StyleSheet, View} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {useNavigation} from "@react-navigation/native";
 
 import {useThemedStyles} from "../hooks/useTheme";
-import {ColorTheme, Size} from "../constants/theme";
 import {navigationRef} from "../hooks/navigationRef";
+import {ColorTheme, Size} from "../constants/theme";
+
+import Button from "../components/Button";
+import ThemedText from "../components/ThemedText";
+import CustomTextInput from "../components/CustomTextInput";
+import ThemedTextHeader from "../components/ThemedTextHeader";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -43,7 +47,6 @@ const createStyles = (theme: ColorTheme) =>
 export default function RegisterScreen() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
-	const navigation = useNavigation();
 
 	const [username, setUsername] = useState<String>("");
 	const [password, setPassword] = useState<String>("");
@@ -70,29 +73,28 @@ export default function RegisterScreen() {
 	}
 
 	return (
-		<View style={[styles.container, {paddingBottom: insets.bottom, paddingTop: insets.top}]}>
+		<View style={[styles.container, {paddingBottom: insets.bottom + 80, paddingTop: insets.top}]}>
+			<ThemedTextHeader text="Register account:" />
 			<View style={styles.container}>
 				<View>
-					<Text style={styles.text}>Username:</Text>
-					<TextInput
+					<ThemedText text="Username:" bold={false} muted={false} />
+					<CustomTextInput
 						placeholder="username"
-						placeholderTextColor="grey"
+						placeholderColor="grey"
+						password={false}
 						onChangeText={setUsername}
-						style={styles.textInput}
 					/>
 				</View>
 				<View>
-					<Text style={styles.text}>Password:</Text>
-					<TextInput
+					<ThemedText text="Password:" bold={false} muted={false} />
+					<CustomTextInput
 						placeholder="password"
-						placeholderTextColor="grey"
+						placeholderColor="grey"
+						password={true}
 						onChangeText={setPassword}
-						style={styles.textInput}
 					/>
 				</View>
-				<Pressable style={styles.button} onPress={submitRegisterDetails}>
-					<Text style={styles.buttonText}>Submit</Text>
-				</Pressable>
+				<Button text="Submit" onPress={submitRegisterDetails} />
 			</View>
 		</View>
 	);

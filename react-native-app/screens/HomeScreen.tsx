@@ -1,9 +1,13 @@
-import {StyleSheet, Text, View, Pressable} from "react-native";
+import {StyleSheet, View} from "react-native";
 
-import {useThemedStyles} from "../hooks/useTheme";
-import {ColorTheme, Size} from "../constants/theme";
-import {navigationRef} from "../hooks/navigationRef";
 import {userIsSignedIn} from "../context/authContext";
+import {useThemedStyles} from "../hooks/useTheme";
+import {navigationRef} from "../hooks/navigationRef";
+import {ColorTheme, Size} from "../constants/theme";
+
+import Button from "../components/Button";
+import ThemedTextHeader from "../components/ThemedTextHeader";
+import ThemedText from "../components/ThemedText";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -45,15 +49,14 @@ export default function LoginScreen() {
 
 	return (
 		<View style={[styles.container]}>
-			<Text style={styles.text}>Welcome to the Video Game Movie Library</Text>
+			<View>
+				<ThemedTextHeader text="Welcome" />
+				<ThemedText text="to the Video Game Movie Library" bold={true} muted={true} />
+			</View>
 			{!isSignedIn && (
 				<View>
-					<Pressable style={styles.button} onPress={navigateToLogin}>
-						<Text style={styles.buttonText}>Go to login</Text>
-					</Pressable>
-					<Pressable style={styles.button} onPress={navigateToRegister}>
-						<Text style={styles.buttonText}>Go to register</Text>
-					</Pressable>
+					<Button text="Go to login" onPress={navigateToLogin} />
+					<Button text="Register new account" onPress={navigateToRegister} />
 				</View>
 			)}
 		</View>

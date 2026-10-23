@@ -1,10 +1,12 @@
-import {View, Pressable, Text, StyleSheet} from "react-native";
+import {View, Text, StyleSheet} from "react-native";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 
+import {useAuth} from "../context/authContext";
 import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
-import {useAuth} from "../context/authContext";
-import {SafeAreaInsetsContext, useSafeAreaInsets} from "react-native-safe-area-context";
+
+import Button from "../components/Button";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -66,9 +68,7 @@ export default function ProfileScreen() {
 				<Text style={styles.text}>User details</Text>
 				<Text style={styles.text}>User posted reviews</Text>
 			</View>
-			<Pressable style={styles.button} onPress={logout}>
-				<Text style={styles.buttonText}>Logout</Text>
-			</Pressable>
+			<Button text="Logout" onPress={logout} />
 		</View>
 	);
 }

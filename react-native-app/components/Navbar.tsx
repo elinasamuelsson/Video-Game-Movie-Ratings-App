@@ -1,10 +1,12 @@
-import {View, Pressable, Text, StyleSheet} from "react-native";
+import {View, Pressable, StyleSheet} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import Lucide from "@react-native-vector-icons/lucide";
 
 import {navigationRef} from "../hooks/navigationRef";
 import {useThemedStyles} from "../hooks/useTheme";
 import {Size, ColorTheme} from "../constants/theme";
 import {userIsSignedIn} from "../context/authContext";
+import ButtonNav from "./ButtonNav";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -20,8 +22,9 @@ const createStyles = (theme: ColorTheme) =>
 			alignItems: "center",
 			elevation: Size.medium,
 		},
-		text: {
+		icon: {
 			color: theme.textMuted,
+			fontSize: Size.xLarge,
 		},
 	});
 
@@ -33,16 +36,14 @@ export default function Navbar() {
 
 	return (
 		<View style={[styles.bar, {bottom: insets.bottom + 8}]}>
-			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}>
-				<Text style={styles.text}>Home</Text>
-			</Pressable>
-			<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Movies")}>
-				<Text style={styles.text}>Movies</Text>
-			</Pressable>
+			<ButtonNav icon="house" onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")} />
+			<ButtonNav icon="film" onPress={() => navigationRef.isReady() && navigationRef.navigate("Movies")} />
+
 			{isSignedIn && (
-				<Pressable onPress={() => navigationRef.isReady() && navigationRef.navigate("Profile")}>
-					<Text style={styles.text}>Profile</Text>
-				</Pressable>
+				<ButtonNav
+					icon="person-standing"
+					onPress={() => navigationRef.isReady() && navigationRef.navigate("Profile")}
+				/>
 			)}
 		</View>
 	);

@@ -1,6 +1,8 @@
 import {useMemo} from "react";
+
 import {StyleSheet, useColorScheme} from "react-native";
-import {Colors, Theme} from "../constants/theme";
+
+import {Colors, ColorTheme} from "../constants/theme";
 
 export function useTheme() {
 	const scheme = useColorScheme();
@@ -11,7 +13,7 @@ export function useTheme() {
 	};
 }
 
-export function useThemedStyles<T extends StyleSheet.NamedStyles<T>>(factory: (colors: Theme) => T): T {
+export function useThemedStyles<T extends StyleSheet.NamedStyles<T>>(factory: (colors: ColorTheme) => T): T {
 	const {colors} = useTheme();
 	return useMemo(() => factory(colors), [colors, factory]);
 }

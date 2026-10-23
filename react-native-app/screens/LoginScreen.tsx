@@ -1,12 +1,17 @@
 import {useState} from "react";
 
-import {StyleSheet, Pressable, Text, TextInput, View} from "react-native";
-
-import {useThemedStyles} from "../hooks/useTheme";
-import {ColorTheme, Size} from "../constants/theme";
+import {StyleSheet, View} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+
 import {useAuth} from "../context/authContext";
+import {useThemedStyles} from "../hooks/useTheme";
 import {navigationRef} from "../hooks/navigationRef";
+import {ColorTheme, Size} from "../constants/theme";
+
+import Button from "../components/Button";
+import ThemedText from "../components/ThemedText";
+import CustomTextInput from "../components/CustomTextInput";
+import ThemedTextHeader from "../components/ThemedTextHeader";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -76,33 +81,30 @@ export default function LoginScreen() {
 	}
 
 	return (
-		<View style={[styles.container, {paddingBottom: insets.bottom, paddingTop: insets.top}]}>
+		<View style={[styles.container, {paddingBottom: insets.bottom + 80, paddingTop: insets.top}]}>
+			<ThemedTextHeader text="Login:" />
 			<View style={styles.container}>
 				<View>
-					<Text style={styles.text}>Username:</Text>
-					<TextInput
+					<ThemedText text="Username:" bold={false} muted={false} />
+					<CustomTextInput
 						placeholder="username"
-						placeholderTextColor="grey"
+						placeholderColor="grey"
+						password={false}
 						onChangeText={setUsername}
-						style={styles.textInput}
 					/>
 				</View>
 				<View>
-					<Text style={styles.text}>Password:</Text>
-					<TextInput
+					<ThemedText text="Password:" bold={false} muted={false} />
+					<CustomTextInput
 						placeholder="password"
-						placeholderTextColor="grey"
+						placeholderColor="grey"
+						password={true}
 						onChangeText={setPassword}
-						style={styles.textInput}
 					/>
 				</View>
-				<Pressable style={styles.button} onPress={submitLoginDetails}>
-					<Text style={styles.buttonText}>Login</Text>
-				</Pressable>
+				<Button text="Login" onPress={submitLoginDetails} />
 			</View>
-			<Pressable style={styles.button} onPress={navigateToRegister}>
-				<Text style={styles.buttonText}>Register</Text>
-			</Pressable>
+			<Button text="Register" onPress={navigateToRegister} />
 		</View>
 	);
 }

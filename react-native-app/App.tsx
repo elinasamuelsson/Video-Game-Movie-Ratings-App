@@ -4,7 +4,7 @@ import {SafeAreaProvider} from "react-native-safe-area-context";
 
 import {navigationRef} from "./hooks/navigationRef";
 import {AuthProvider, useAuth, userIsSignedIn, userIsSignedOut} from "./context/authContext";
-import Navbar from "./components/Navbar";
+import {Movie} from "./types/movie";
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -12,7 +12,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import MoviesScreen from "./screens/MoviesScreen";
 import MovieScreen from "./screens/MovieScreen";
-import {Movie} from "./types/movie";
+import Navbar from "./components/Navbar";
 
 export type RootStackParamList = {
 	Home: undefined;
@@ -46,7 +46,6 @@ const RootStack = createNativeStackNavigator<RootStackParamList>({
 			screen: MoviesScreen,
 		},
 		Movie: {
-			if: userIsSignedIn,
 			screen: MovieScreen,
 		},
 	},

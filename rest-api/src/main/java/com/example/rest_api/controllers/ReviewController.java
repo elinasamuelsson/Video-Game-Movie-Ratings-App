@@ -33,8 +33,8 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.createReview(review));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteReview(@RequestBody UUID reviewId) {
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteReview(@RequestParam UUID reviewId) {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok().build();
     }
