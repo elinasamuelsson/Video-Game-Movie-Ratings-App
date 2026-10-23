@@ -12,6 +12,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import MoviesScreen from "./screens/MoviesScreen";
 import MovieScreen from "./screens/MovieScreen";
+import ReviewScreen from "./screens/ReviewScreen";
 import Navbar from "./components/Navbar";
 
 export type RootStackParamList = {
@@ -21,6 +22,7 @@ export type RootStackParamList = {
 	Profile: undefined;
 	Movies: undefined;
 	Movie: {movie: Movie};
+	Review: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>({
@@ -47,6 +49,10 @@ const RootStack = createNativeStackNavigator<RootStackParamList>({
 		},
 		Movie: {
 			screen: MovieScreen,
+		},
+		Review: {
+			if: userIsSignedIn,
+			screen: ReviewScreen,
 		},
 	},
 });

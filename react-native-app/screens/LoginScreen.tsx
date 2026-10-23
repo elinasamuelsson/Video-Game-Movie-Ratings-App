@@ -67,7 +67,14 @@ export default function LoginScreen() {
 
 			const data = await response.text();
 			if (response.ok && data) {
-				await signIn(data);
+				const meResponse = await fetch(`${API_URL}/api/users/me`, {
+					headers: {Authorization: `Bearer ${data}`},
+				});
+				const user = await meResponse.json();
+				console.log(meResponse);
+				console.log(user);
+
+				await signIn(data, user);
 			} else {
 				console.error(data);
 			}

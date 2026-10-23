@@ -1,7 +1,11 @@
+import {useEffect, useState} from "react";
+
 import {View, Text, StyleSheet} from "react-native";
+
+import {useAuth} from "../context/authContext";
 import {useThemedStyles} from "../hooks/useTheme";
-import {Review} from "../types/review";
 import {ColorTheme, Size} from "../constants/theme";
+import {Review} from "../types/review";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -43,12 +47,40 @@ type ReviewCardProps = {
 };
 
 export default function ReviewCard({review}: ReviewCardProps) {
+	const [username, setUsername] = useState<string | null>(null);
 	const styles = useThemedStyles(createStyles);
+	const {token} = useAuth();
+
+	const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
+	async function fetchUsername() {
+		try {
+			const response = await fetch(`${API_URL}/api/users/user?userId=${review.userId}`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const data = await response.text();
+
+			setUsername(data);
+			return data;
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
+	}
+
+	useEffect(() => {
+		fetchUsername();
+	}, []);
 
 	return (
 		<View style={styles.card}>
 			<View style={styles.header}>
-				<Text style={styles.username}>UsernamePH</Text>
+				<Text style={styles.username}>{username}</Text>
 				<Text style={styles.rating}>★ {review.rating}/5</Text>
 			</View>
 			<Text style={styles.title} numberOfLines={1}>

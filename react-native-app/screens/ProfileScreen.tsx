@@ -1,6 +1,5 @@
 import {View, Text, StyleSheet} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import * as SecureStore from "expo-secure-store";
 
 import {useAuth} from "../context/authContext";
 import {useThemedStyles} from "../hooks/useTheme";
@@ -36,11 +35,10 @@ const createStyles = (theme: ColorTheme) =>
 export default function ProfileScreen() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
-	const {signOut} = useAuth();
+	const {token, signOut} = useAuth();
 
 	async function logout() {
-		const sessionToken = await SecureStore.getItemAsync("sessionToken");
-		const authorization = await ("Bearer " + sessionToken);
+		const authorization = "Bearer " + token;
 
 		const API_URL = process.env.EXPO_PUBLIC_API_URL;
 		try {

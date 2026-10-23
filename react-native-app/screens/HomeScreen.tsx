@@ -1,6 +1,6 @@
 import {StyleSheet, View} from "react-native";
 
-import {userIsSignedIn} from "../context/authContext";
+import {useAuth, userIsSignedIn} from "../context/authContext";
 import {useThemedStyles} from "../hooks/useTheme";
 import {navigationRef} from "../hooks/navigationRef";
 import {ColorTheme, Size} from "../constants/theme";
@@ -16,6 +16,9 @@ const createStyles = (theme: ColorTheme) =>
 			flex: 1,
 			alignItems: "center",
 			justifyContent: "space-evenly",
+		},
+		row: {
+			flexDirection: "row",
 		},
 		text: {
 			color: theme.text,
@@ -39,6 +42,7 @@ const createStyles = (theme: ColorTheme) =>
 export default function LoginScreen() {
 	const styles = useThemedStyles(createStyles);
 	const isSignedIn = userIsSignedIn();
+	const {user} = useAuth();
 
 	function navigateToLogin() {
 		navigationRef.navigate("Login");
@@ -50,7 +54,10 @@ export default function LoginScreen() {
 	return (
 		<View style={[styles.container]}>
 			<View>
-				<ThemedTextHeader text="Welcome" />
+				<View style={styles.row}>
+					<ThemedTextHeader text="Welcome " />
+					{user && <ThemedTextHeader text={`${user.username}`} />}
+				</View>
 				<ThemedText text="to the Video Game Movie Library" bold={true} muted={true} />
 			</View>
 			{!isSignedIn && (
