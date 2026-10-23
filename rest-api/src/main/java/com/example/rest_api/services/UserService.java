@@ -1,11 +1,14 @@
 package com.example.rest_api.services;
 
+import com.example.rest_api.dtos.responses.MeResponse;
 import com.example.rest_api.models.User;
 import com.example.rest_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -14,5 +17,17 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public MeResponse getMe(String name) {
+        Optional<User> optUser = userRepository.getUserByUsername(name);
+        User user = optUser.get();
+        return new MeResponse(user.getId(), user.getUsername());
+    }
+
+    public String getUser(UUID id) {
+        User user = userRepository.getUserById(id);
+
+        return user.getUsername();
     }
 }
