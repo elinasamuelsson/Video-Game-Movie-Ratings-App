@@ -1,6 +1,7 @@
 package com.example.rest_api.services;
 
 import com.example.rest_api.dtos.responses.MeResponse;
+import com.example.rest_api.dtos.responses.UserResponse;
 import com.example.rest_api.models.User;
 import com.example.rest_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,8 @@ public class UserService {
         return new MeResponse(user.getId(), user.getUsername());
     }
 
-    public String getUser(UUID id) {
+    public UserResponse getUser(UUID id) {
         User user = userRepository.getUserById(id);
-
-        return user.getUsername();
+        return new UserResponse(user.getUsername(), user.getBio(), user.getProfileImage(), user.getCreatedAt());
     }
 }

@@ -20,4 +20,11 @@ public class MovieController {
         List<Movie> response = movieService.getAllMovies();
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/movie")
+    public ResponseEntity<Movie> getMovieById(@RequestParam UUID movieId) {
+        Movie response = movieService.getMovieById(movieId);
+        System.out.println(response.toString());
+        return ResponseEntity.ok().body(response);
+    }
 }

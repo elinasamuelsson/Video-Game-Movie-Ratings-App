@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useCallback, useState} from "react";
 
 import {View, Text, StyleSheet} from "react-native";
 
@@ -6,6 +6,7 @@ import {useAuth} from "../context/authContext";
 import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
 import {Review} from "../types/review";
+import {useFocusEffect} from "@react-navigation/native";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -48,6 +49,7 @@ type ReviewCardProps = {
 
 export default function ReviewCard({review}: ReviewCardProps) {
 	const [username, setUsername] = useState<string | null>(null);
+	const [movieTitle, setMovieTitle] = useState<string | null>(null);
 	const styles = useThemedStyles(createStyles);
 	const {token} = useAuth();
 
@@ -63,24 +65,51 @@ export default function ReviewCard({review}: ReviewCardProps) {
 				},
 			});
 
-			const data = await response.text();
+			const data = await response.json();
 
-			setUsername(data);
-			return data;
+			return data.username;
 		} catch (error) {
 			console.error(error);
 			return null;
 		}
 	}
 
-	useEffect(() => {
-		fetchUsername();
-	}, []);
+	async function fetchMovieName() {
+		try {
+			const response = await fetch(`${API_URL}/api/movies/movie?movieId=${review.movieId}`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const data = await response.json();
+
+			return data.title;
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
+	}
+
+	useFocusEffect(
+		useCallback(() => {
+			Promise.all([fetchUsername(), fetchMovieName()])
+				.then(([username, title]) => {
+					setUsername(username);
+					setMovieTitle(title);
+				})
+				.catch(console.error);
+		}, [token, review.userId, review.movieId]),
+	);
 
 	return (
 		<View style={styles.card}>
 			<View style={styles.header}>
-				<Text style={styles.username}>{username}</Text>
+				<Text style={styles.username}>
+					{username} · {movieTitle}
+				</Text>
 				<Text style={styles.rating}>★ {review.rating}/5</Text>
 			</View>
 			<Text style={styles.title} numberOfLines={1}>
