@@ -1,5 +1,6 @@
 package com.example.rest_api.services;
 
+import com.example.rest_api.dtos.requests.UpdateUserRequest;
 import com.example.rest_api.dtos.responses.MeResponse;
 import com.example.rest_api.dtos.responses.UserResponse;
 import com.example.rest_api.models.User;
@@ -29,5 +30,15 @@ public class UserService {
     public UserResponse getUser(UUID id) {
         User user = userRepository.getUserById(id);
         return new UserResponse(user.getUsername(), user.getBio(), user.getProfileImage(), user.getCreatedAt());
+    }
+
+    public void updateMe(UUID userId, UpdateUserRequest request) {
+        User user = userRepository.getUserById(userId);
+
+        if (request.bio() != null) {
+            user.setBio(request.bio());
+        }
+
+        userRepository.save(user);
     }
 }

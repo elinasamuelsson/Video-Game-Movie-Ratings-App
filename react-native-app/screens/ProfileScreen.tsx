@@ -1,19 +1,23 @@
 import {useCallback, useState} from "react";
 
-import {View, Text, StyleSheet, FlatList} from "react-native";
+import {useFocusEffect} from "@react-navigation/native";
+import {View, Text, StyleSheet, FlatList, Pressable} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 import {useAuth} from "../context/authContext";
 import {useThemedStyles} from "../hooks/useTheme";
+import {navigationRef} from "../hooks/navigationRef";
 import {ColorTheme, Size} from "../constants/theme";
-import {User} from "../types/user";
+import {UserDetails} from "../types/userDetails";
 import {Review} from "../types/review";
 
 import Button from "../components/Button";
 import ReviewCard from "../components/ReviewCard";
 import ThemedText from "../components/ThemedText";
 import ThemedTextHeader from "../components/ThemedTextHeader";
-import {useFocusEffect} from "@react-navigation/native";
+import Lucide from "@react-native-vector-icons/lucide";
+import {User} from "../types/user";
+import formatDate from "../utils/formatDate";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -47,6 +51,16 @@ const createStyles = (theme: ColorTheme) =>
 		},
 		bio: {
 			marginBottom: Size.medium,
+			justifyContent: "center",
+		},
+		bioHeader: {
+			flexDirection: "row",
+			gap: Size.medium,
+		},
+		bioEdit: {
+			color: theme.text,
+			fontSize: Size.large,
+			paddingTop: Size.small,
 		},
 		reviewsHeader: {
 			flexDirection: "row",
@@ -72,7 +86,7 @@ export default function ProfileScreen() {
 
 	const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-	const [userDetails, setUserDetails] = useState<User | null>(null);
+	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 	const [reviews, setReviews] = useState<Review[] | null>([]);
 
 	async function fetchUser() {
@@ -87,7 +101,7 @@ export default function ProfileScreen() {
 
 			const data = await response.json();
 
-			return data as User;
+			return data as UserDetails;
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -147,6 +161,10 @@ export default function ProfileScreen() {
 		}
 	}
 
+	function navigateToUserEdit() {
+		navigationRef.navigate("UserEdit", {user, userDetails});
+	}
+
 	const header = (
 		<View>
 			<View style={styles.profileTop}>
@@ -155,12 +173,21 @@ export default function ProfileScreen() {
 				</View>
 				<View style={styles.profileInfo}>
 					<ThemedTextHeader text={`${userDetails?.username}`} />
-					<ThemedText text="Member since: Month Year" bold={false} muted={true} />
+					<ThemedText
+						text={userDetails?.createdAt ? `Member since: ${formatDate(userDetails.createdAt)}` : ""}
+						bold={false}
+						muted={true}
+					/>
 				</View>
 			</View>
 
 			<View style={styles.bio}>
-				<ThemedText text="Bio" bold={true} muted={false} />
+				<View style={styles.bioHeader}>
+					<ThemedText text="Bio" bold={true} muted={false} />
+					<Pressable onPress={() => navigateToUserEdit()}>
+						<Lucide name="pen-line" style={styles.bioEdit} />
+					</Pressable>
+				</View>
 				<ThemedText
 					text={!userDetails?.bio ? "This user hasn't written a bio yet..." : `${userDetails.bio}`}
 					bold={false}

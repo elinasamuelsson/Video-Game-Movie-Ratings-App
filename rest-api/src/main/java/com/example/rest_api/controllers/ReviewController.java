@@ -26,6 +26,7 @@ public class ReviewController {
     @GetMapping("/user")
     public ResponseEntity<List<Review>> getAllReviewsForUser(@RequestParam UUID userId) {
         List<Review> response = reviewService.getAllReviewsForUser(userId);
+        System.out.println(response.toString());
         return ResponseEntity.ok().body(response);
     }
 

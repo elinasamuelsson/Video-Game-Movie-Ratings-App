@@ -6,6 +6,7 @@ import {navigationRef} from "./hooks/navigationRef";
 import {AuthProvider, useAuth, userIsSignedIn, userIsSignedOut} from "./context/authContext";
 import {Movie} from "./types/movie";
 import {Review} from "./types/review";
+import {User} from "./types/user";
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -14,7 +15,9 @@ import ProfileScreen from "./screens/ProfileScreen";
 import MoviesScreen from "./screens/MoviesScreen";
 import MovieScreen from "./screens/MovieScreen";
 import ReviewScreen from "./screens/ReviewScreen";
+import UserEditScreen from "./screens/UserEditScreen";
 import Navbar from "./components/Navbar";
+import {UserDetails} from "./types/userDetails";
 
 export type RootStackParamList = {
 	Home: undefined;
@@ -24,6 +27,7 @@ export type RootStackParamList = {
 	Movies: undefined;
 	Movie: {movie: Movie};
 	Review: {movieId: string; review?: Review};
+	UserEdit: {user: User | null; userDetails: UserDetails | null};
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>({
@@ -54,6 +58,10 @@ const RootStack = createNativeStackNavigator<RootStackParamList>({
 		Review: {
 			if: userIsSignedIn,
 			screen: ReviewScreen,
+		},
+		UserEdit: {
+			if: userIsSignedIn,
+			screen: UserEditScreen,
 		},
 	},
 });

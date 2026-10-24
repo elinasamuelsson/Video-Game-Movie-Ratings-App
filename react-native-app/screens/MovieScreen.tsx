@@ -16,6 +16,7 @@ import ThemedText from "../components/ThemedText";
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import InfoRow from "../components/InfoRow";
 import {useFocusEffect} from "@react-navigation/native";
+import formatDate from "../utils/formatDate";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -170,14 +171,6 @@ export default function MovieScreen({route}: Props) {
 		return `${hours}h ${minutes}m`;
 	}
 
-	function formatReleaseDate(isoDate: string): string {
-		return new Date(isoDate).toLocaleDateString("en-US", {
-			month: "long",
-			year: "numeric",
-			timeZone: "UTC",
-		});
-	}
-
 	function getAverageRating(reviews: Review[]): number | null {
 		if (reviews.length === 0) return null;
 		const sum = reviews.reduce((total, review) => total + review.rating, 0);
@@ -195,7 +188,7 @@ export default function MovieScreen({route}: Props) {
 				</View>
 				<View style={styles.topInfo}>
 					<ThemedText
-						text={`${formatReleaseDate(movie.releaseDate)} · ${formatRuntime(movie.runtimeSeconds)}`}
+						text={`${formatDate(movie.releaseDate)} · ${formatRuntime(movie.runtimeSeconds)}`}
 						bold={false}
 						muted={true}
 					/>
