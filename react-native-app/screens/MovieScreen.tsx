@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 import {FlatList, StyleSheet, Text, View} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
@@ -15,6 +15,7 @@ import ReviewCard from "../components/ReviewCard";
 import ThemedText from "../components/ThemedText";
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import InfoRow from "../components/InfoRow";
+import {useFocusEffect} from "@react-navigation/native";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -150,14 +151,16 @@ export default function MovieScreen({route}: Props) {
 		}
 	}
 
-	async function postReview() {}
-
-	useEffect(() => {
+	useFocusEffect(() => {
 		fetchReviews().then(setReviews).catch(console.error);
-	}, [movie.id]);
+	});
 
 	function navigateToMovies() {
 		navigationRef.navigate("Movies");
+	}
+
+	function navigateToReview() {
+		navigationRef.navigate("Review", {movieId: `${movie.id}`, review: undefined});
 	}
 
 	function formatRuntime(totalSeconds: number): string {
@@ -232,7 +235,7 @@ export default function MovieScreen({route}: Props) {
 				ListEmptyComponent={<Text style={styles.emptyText}>No reviews yet.</Text>}
 			/>
 			<View style={[styles.footer, {paddingBottom: insets.bottom + 80}]}>
-				<Button text="Post review" onPress={postReview} />
+				<Button text="Post review" onPress={navigateToReview} />
 				<Button text="Back to movies" onPress={navigateToMovies} />
 			</View>
 		</View>

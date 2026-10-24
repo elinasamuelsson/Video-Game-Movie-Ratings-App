@@ -1,9 +1,10 @@
 package com.example.rest_api.controllers;
 
+import com.example.rest_api.dtos.requests.ReviewRequest;
 import com.example.rest_api.models.Review;
 import com.example.rest_api.services.ReviewService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,9 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody Review review) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.createReview(review));
+    public ResponseEntity<Void> createReview(@RequestBody ReviewRequest request, Authentication authentication) {
+        reviewService.createReview(request, authentication);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping()

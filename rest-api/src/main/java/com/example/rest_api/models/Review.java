@@ -21,4 +21,13 @@ public class Review {
     private String title;
     private String content;
     private int rating;
+
+    public  Review(UUID movieId, UUID userId, String title, String content, int rating) {
+        this.id = UUID.randomUUID();
+        this.movieId = movieId;
+        this.userId = userId;
+        this.title = title;
+        this.content = content;
+        this.rating = rating;
+    }
 }

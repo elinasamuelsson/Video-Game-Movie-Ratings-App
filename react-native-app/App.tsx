@@ -5,6 +5,7 @@ import {SafeAreaProvider} from "react-native-safe-area-context";
 import {navigationRef} from "./hooks/navigationRef";
 import {AuthProvider, useAuth, userIsSignedIn, userIsSignedOut} from "./context/authContext";
 import {Movie} from "./types/movie";
+import {Review} from "./types/review";
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -22,7 +23,7 @@ export type RootStackParamList = {
 	Profile: undefined;
 	Movies: undefined;
 	Movie: {movie: Movie};
-	Review: undefined;
+	Review: {movieId: string; review?: Review};
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>({

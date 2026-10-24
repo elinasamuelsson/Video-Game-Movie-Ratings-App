@@ -7,6 +7,9 @@ const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
 		textInput: {
 			backgroundColor: theme.surface,
+			borderColor: theme.border,
+			borderWidth: 1,
+			borderRadius: Size.small,
 			color: theme.textMuted,
 			marginVertical: Size.small,
 
