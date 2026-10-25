@@ -5,16 +5,17 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 import {useAuth} from "../context/authContext";
+import {useToast} from "../context/toastContext";
+import {updateReview, createReview} from "../api/reviews";
 import {navigationRef} from "../hooks/navigationRef";
 import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
 import {RootStackParamList} from "../App";
+
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import Button from "../components/Button";
 import ThemedText from "../components/ThemedText";
 import CustomTextInput from "../components/CustomTextInput";
-import {updateReview, createReview} from "../api/reviews";
-import {useToast} from "../context/toastContext";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -106,6 +107,7 @@ export default function ReviewFormScreen({route}: Props) {
 				/>
 				<TextInput
 					style={[styles.multilineInput]}
+					accessibilityLabel="Type your review"
 					placeholder="Type your review..."
 					placeholderTextColor="grey"
 					value={content}
@@ -114,7 +116,14 @@ export default function ReviewFormScreen({route}: Props) {
 				/>
 				<View style={styles.stars}>
 					{[1, 2, 3, 4, 5].map((star) => (
-						<Pressable key={star} onPress={() => setRating(star)}>
+						<Pressable
+							key={star}
+							onPress={() => setRating(star)}
+							hitSlop={2}
+							accessibilityRole="button"
+							accessibilityLabel={`${star} star${star > 1 ? "s" : ""}`}
+							accessibilityState={{selected: star <= rating}}
+						>
 							<ThemedText text="★" bold={true} muted={star > rating} />
 						</Pressable>
 					))}

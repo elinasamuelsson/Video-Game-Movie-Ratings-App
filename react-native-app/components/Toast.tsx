@@ -59,7 +59,11 @@ export default function Toast({message, onHide}: ToastProps) {
 	}
 
 	return (
-		<Animated.View style={[styles.toast, {bottom: insets.bottom + 100, opacity}]}>
+		<Animated.View
+			style={[styles.toast, {bottom: insets.bottom + 100, opacity}]}
+			accessibilityRole="alert"
+			accessibilityLiveRegion="polite"
+		>
 			<Animated.Text style={styles.text}>{message}</Animated.Text>
 			<Pressable style={styles.button} onPress={dismiss} hitSlop={8}>
 				<Animated.Text style={styles.buttonText}>OK</Animated.Text>

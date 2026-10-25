@@ -5,14 +5,15 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 import {useAuth} from "../context/authContext";
+import {useToast} from "../context/toastContext";
+import {updateMe} from "../api/users";
 import {navigationRef} from "../hooks/navigationRef";
 import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
 import {RootStackParamList} from "../App";
+
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import Button from "../components/Button";
-import {updateMe} from "../api/users";
-import {useToast} from "../context/toastContext";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -72,6 +73,7 @@ export default function EditProfileScreen({route}: Props) {
 			<View style={styles.containerInner}>
 				<TextInput
 					style={styles.multilineInput}
+					accessibilityLabel="Write something about yourself"
 					placeholder="Write something about yourself..."
 					placeholderTextColor="grey"
 					value={bio}

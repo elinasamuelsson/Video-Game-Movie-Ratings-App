@@ -1,10 +1,14 @@
 import {useCallback, useState} from "react";
 
-import {useFocusEffect} from "@react-navigation/native";
 import {View, Text, StyleSheet, FlatList, Pressable} from "react-native";
+import {useFocusEffect} from "@react-navigation/native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 import {useAuth} from "../context/authContext";
+import {useToast} from "../context/toastContext";
+import {logout} from "../api/auth";
+import {getUser} from "../api/users";
+import {getReviewsByUser} from "../api/reviews";
 import {useThemedStyles} from "../hooks/useTheme";
 import {navigationRef} from "../hooks/navigationRef";
 import {ColorTheme, Size} from "../constants/theme";
@@ -16,12 +20,8 @@ import ReviewCard from "../components/ReviewCard";
 import ThemedText from "../components/ThemedText";
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import Lucide from "@react-native-vector-icons/lucide";
-import formatDate from "../utils/formatDate";
-import {useToast} from "../context/toastContext";
-import {logout} from "../api/auth";
-import {getUser} from "../api/users";
-import {getReviewsByUser} from "../api/reviews";
 import LoadingIndicator from "../components/LoadingIndicator";
+import formatDate from "../utils/formatDate";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -74,11 +74,6 @@ const createStyles = (theme: ColorTheme) =>
 			flexDirection: "row",
 			justifyContent: "space-between",
 			alignItems: "center",
-		},
-		emptyText: {
-			color: theme.textMuted,
-			textAlign: "center",
-			marginTop: Size.medium,
 		},
 		footer: {
 			paddingHorizontal: Size.medium,
@@ -158,7 +153,11 @@ export default function ProfileScreen() {
 			<View style={styles.bio}>
 				<View style={styles.bioHeader}>
 					<ThemedText text="Bio" bold={true} muted={false} />
-					<Pressable onPress={() => navigateToUserEdit()}>
+					<Pressable
+						onPress={() => navigateToUserEdit()}
+						accessibilityRole="button"
+						accessibilityLabel="Edit bio"
+					>
 						<Lucide name="pen-line" style={styles.bioEdit} />
 					</Pressable>
 				</View>
@@ -195,7 +194,7 @@ export default function ProfileScreen() {
 					isLoading ? (
 						<LoadingIndicator />
 					) : (
-						<Text style={styles.emptyText}>You haven't posted any reviews yet...</Text>
+						<ThemedText text="You haven't posted any reviews yet..." muted={true} bold={false} />
 					)
 				}
 			/>

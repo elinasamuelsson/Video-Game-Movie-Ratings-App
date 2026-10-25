@@ -1,18 +1,19 @@
 import {useCallback, useState} from "react";
 
 import {View, Text, StyleSheet, Pressable} from "react-native";
+import {useFocusEffect} from "@react-navigation/native";
 
 import {useAuth} from "../context/authContext";
-import {useThemedStyles} from "../hooks/useTheme";
-import {ColorTheme, Size} from "../constants/theme";
-import {Review} from "../types/review";
-import {useFocusEffect} from "@react-navigation/native";
-import Lucide from "@react-native-vector-icons/lucide";
-import {navigationRef} from "../hooks/navigationRef";
-import {getMovie} from "../api/movies";
 import {useToast} from "../context/toastContext";
 import {getUser} from "../api/users";
 import {deleteReview} from "../api/reviews";
+import {getMovie} from "../api/movies";
+import {navigationRef} from "../hooks/navigationRef";
+import {useThemedStyles} from "../hooks/useTheme";
+import {ColorTheme, Size} from "../constants/theme";
+import {Review} from "../types/review";
+
+import Lucide from "@react-native-vector-icons/lucide";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -146,10 +147,20 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 
 				{isOwner && (
 					<View style={styles.actionsWrapper}>
-						<Pressable onPress={navigateToReview}>
+						<Pressable
+							onPress={navigateToReview}
+							hitSlop={6}
+							accessibilityRole="button"
+							accessibilityLabel="Edit review"
+						>
 							<Lucide name="pen-line" style={styles.actionIcon} />
 						</Pressable>
-						<Pressable onPress={handleDelete}>
+						<Pressable
+							onPress={handleDelete}
+							hitSlop={6}
+							accessibilityRole="button"
+							accessibilityLabel="Delete review"
+						>
 							<Lucide name="trash-2" style={styles.actionIcon} />
 						</Pressable>
 					</View>

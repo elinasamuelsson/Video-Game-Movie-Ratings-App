@@ -16,5 +16,9 @@ type ThemedTextProps = {text: String};
 export default function ThemedTextHeader({text}: ThemedTextProps) {
 	const styles = useThemedStyles(createStyles);
 
-	return <Text style={styles.text}>{text}</Text>;
+	return (
+		<Text style={styles.text} accessibilityRole="header">
+			{text}
+		</Text>
+	);
 }

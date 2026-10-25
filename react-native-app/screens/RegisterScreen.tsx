@@ -3,6 +3,8 @@ import {useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 
+import {useToast} from "../context/toastContext";
+import {register} from "../api/auth";
 import {useThemedStyles} from "../hooks/useTheme";
 import {navigationRef} from "../hooks/navigationRef";
 import {ColorTheme, Size} from "../constants/theme";
@@ -11,8 +13,6 @@ import Button from "../components/Button";
 import ThemedText from "../components/ThemedText";
 import CustomTextInput from "../components/CustomTextInput";
 import ThemedTextHeader from "../components/ThemedTextHeader";
-import {useToast} from "../context/toastContext";
-import {register} from "../api/auth";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -21,28 +21,6 @@ const createStyles = (theme: ColorTheme) =>
 			flex: 1,
 			alignItems: "center",
 			justifyContent: "center",
-		},
-		text: {
-			color: theme.textMuted,
-		},
-		button: {
-			backgroundColor: theme.secondary,
-			borderColor: theme.border,
-			borderRadius: Size.medium,
-			paddingVertical: Size.medium,
-			paddingHorizontal: Size.large,
-
-			color: theme.background,
-		},
-		buttonText: {
-			color: theme.background,
-		},
-		textInput: {
-			backgroundColor: theme.surface,
-			color: theme.textMuted,
-			marginVertical: Size.small,
-
-			width: Size.xxLarge * 3,
 		},
 	});
 

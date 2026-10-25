@@ -1,7 +1,9 @@
 import {Pressable, Text, StyleSheet, View} from "react-native";
-import {Movie} from "../types/movie";
-import {ColorTheme, Size} from "../constants/theme";
+
 import {useThemedStyles} from "../hooks/useTheme";
+import {ColorTheme, Size} from "../constants/theme";
+import {Movie} from "../types/movie";
+
 import ThemedText from "./ThemedText";
 
 const createStyles = (theme: ColorTheme) =>
@@ -31,14 +33,6 @@ const createStyles = (theme: ColorTheme) =>
 		cardContent: {
 			flex: 1,
 			marginLeft: Size.medium,
-		},
-		cardTitle: {
-			color: theme.text,
-			fontSize: 16,
-		},
-		cardSubtitle: {
-			color: theme.textMuted,
-			marginTop: Size.small,
 		},
 	});
 

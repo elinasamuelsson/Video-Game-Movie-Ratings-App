@@ -20,22 +20,8 @@ const createStyles = (theme: ColorTheme) =>
 		row: {
 			flexDirection: "row",
 		},
-		text: {
-			color: theme.text,
-			marginBottom: Size.medium,
-		},
-		button: {
-			backgroundColor: theme.secondary,
-			borderColor: theme.border,
-			borderRadius: Size.medium,
-			paddingVertical: Size.medium,
-			paddingHorizontal: Size.large,
-			marginBottom: Size.small,
-
-			color: theme.background,
-		},
-		buttonText: {
-			color: theme.background,
+		subText: {
+			marginTop: Size.xxLarge,
 		},
 	});
 
@@ -59,6 +45,10 @@ export default function LoginScreen() {
 					{user && <ThemedTextHeader text={`${user.username}`} />}
 				</View>
 				<ThemedText text="to the Video Game Movie Library" bold={true} muted={true} />
+				<View style={styles.subText}>
+					<ThemedText text="Read about and rate" bold={false} muted={true} />
+					<ThemedText text="your favorite video game movies" bold={false} muted={true} />
+				</View>
 			</View>
 			{!isSignedIn && (
 				<View>

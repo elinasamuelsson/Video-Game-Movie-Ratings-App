@@ -1,4 +1,5 @@
 import {Text, Pressable, StyleSheet} from "react-native";
+
 import {ColorTheme, Size} from "../constants/theme";
 import {useThemedStyles} from "../hooks/useTheme";
 

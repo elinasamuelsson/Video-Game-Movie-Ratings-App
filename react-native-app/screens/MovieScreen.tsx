@@ -1,9 +1,12 @@
 import {useCallback, useState} from "react";
 
 import {FlatList, StyleSheet, Text, View} from "react-native";
+import {useFocusEffect} from "@react-navigation/native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {NativeStackScreenProps} from "@react-navigation/native-stack";
 
+import {useToast} from "../context/toastContext";
+import {getReviewsByMovie} from "../api/reviews";
 import {navigationRef} from "../hooks/navigationRef";
 import {useThemedStyles} from "../hooks/useTheme";
 import {ColorTheme, Size} from "../constants/theme";
@@ -15,11 +18,9 @@ import ReviewCard from "../components/ReviewCard";
 import ThemedText from "../components/ThemedText";
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import InfoRow from "../components/InfoRow";
-import {useFocusEffect} from "@react-navigation/native";
-import formatDate from "../utils/formatDate";
-import {useToast} from "../context/toastContext";
-import {getReviewsByMovie} from "../api/reviews";
 import LoadingIndicator from "../components/LoadingIndicator";
+
+import formatDate from "../utils/formatDate";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -27,16 +28,16 @@ const createStyles = (theme: ColorTheme) =>
 			backgroundColor: theme.background,
 			flex: 1,
 		},
+		containerTopRow: {
+			flexDirection: "row",
+			alignItems: "flex-start",
+		},
 		list: {
 			flex: 1,
 			width: "100%",
 			maxWidth: 450,
 			alignSelf: "center",
 			paddingHorizontal: Size.medium,
-		},
-		containerTopRow: {
-			flexDirection: "row",
-			alignItems: "flex-start",
 		},
 		poster: {
 			width: 120,
@@ -58,40 +59,9 @@ const createStyles = (theme: ColorTheme) =>
 			fontSize: 22,
 			fontWeight: "700",
 		},
-		meta: {
-			color: theme.textMuted,
-			fontSize: 14,
-			marginTop: 4,
-		},
-		genres: {
-			color: theme.textMuted,
-			fontSize: 14,
-			marginTop: Size.small,
-		},
-		sectionTitle: {
-			color: theme.text,
-			fontSize: 18,
-			fontWeight: "600",
-			marginTop: Size.large,
-			marginBottom: Size.small,
-		},
-		text: {
-			color: theme.text,
-			fontSize: 14,
-		},
 		infoRow: {
 			flexDirection: "row",
 			marginTop: Size.small,
-		},
-		infoLabel: {
-			color: theme.textMuted,
-			fontSize: 14,
-			width: 90,
-		},
-		infoValue: {
-			color: theme.text,
-			fontSize: 14,
-			flex: 1,
 		},
 		reviewsHeader: {
 			flexDirection: "row",
@@ -100,35 +70,12 @@ const createStyles = (theme: ColorTheme) =>
 			marginTop: Size.large,
 			marginBottom: Size.small,
 		},
-		reviewsTitle: {
-			color: theme.text,
-			fontSize: 18,
-			fontWeight: "600",
-		},
-		averageRating: {
-			color: theme.text,
-			fontSize: 14,
-			fontWeight: "600",
-		},
-		emptyText: {
-			color: theme.textMuted,
-			fontSize: 14,
-		},
 		footer: {
 			flexDirection: "row",
 			alignItems: "center",
 			justifyContent: "center",
 			gap: Size.medium,
 			paddingTop: Size.medium,
-		},
-		button: {
-			backgroundColor: theme.primary,
-			paddingHorizontal: Size.large,
-			paddingVertical: Size.medium,
-			borderRadius: Size.medium,
-		},
-		buttonText: {
-			color: theme.background,
 		},
 	});
 

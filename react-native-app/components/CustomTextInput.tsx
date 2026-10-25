@@ -36,6 +36,7 @@ export default function CustomTextInput({
 
 	return (
 		<TextInput
+			accessibilityLabel={placeholder}
 			placeholder={placeholder}
 			placeholderTextColor={placeholderColor}
 			secureTextEntry={password}
