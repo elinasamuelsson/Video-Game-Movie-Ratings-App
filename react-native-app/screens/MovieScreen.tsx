@@ -17,6 +17,9 @@ import ThemedTextHeader from "../components/ThemedTextHeader";
 import InfoRow from "../components/InfoRow";
 import {useFocusEffect} from "@react-navigation/native";
 import formatDate from "../utils/formatDate";
+import {useToast} from "../context/toastContext";
+import {getReviewsByMovie} from "../api/reviews";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -133,34 +136,31 @@ type Props = NativeStackScreenProps<RootStackParamList, "Movie">;
 
 export default function MovieScreen({route}: Props) {
 	const [reviews, setReviews] = useState<Review[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const {movie} = route.params;
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
-
-	const API_URL = process.env.EXPO_PUBLIC_API_URL;
-
-	async function fetchReviews(): Promise<Review[]> {
-		try {
-			const response = await fetch(`${API_URL}/api/reviews/movie?movieId=${movie.id}`, {
-				method: "GET",
-				headers: {"Content-Type": "application/json"},
-			});
-
-			const data = await response.json();
-
-			return data as Review[];
-		} catch (error) {
-			console.error(error);
-			return [];
-		}
-	}
+	const {dispatch: toastDispatch} = useToast();
 
 	useFocusEffect(
 		useCallback(() => {
-			fetchReviews().then(setReviews).catch(console.error);
+			async function loadReviews() {
+				try {
+					const data = await getReviewsByMovie(movie.id);
+					setReviews(data);
+				} catch (error) {
+					toastDispatch({
+						type: "SHOW",
+						payload: error instanceof Error ? error.message : "Something went wrong",
+					});
+				} finally {
+					setIsLoading(false);
+				}
+			}
+
+			loadReviews();
 		}, [movie.id]),
 	);
-
 	function navigateToMovies() {
 		navigationRef.navigate("Movies");
 	}
@@ -235,7 +235,9 @@ export default function MovieScreen({route}: Props) {
 					/>
 				)}
 				ListHeaderComponent={header}
-				ListEmptyComponent={<Text style={styles.emptyText}>No reviews yet.</Text>}
+				ListEmptyComponent={
+					isLoading ? <LoadingIndicator /> : <ThemedText text="No reviews yet..." muted={true} bold={false} />
+				}
 			/>
 			<View style={[styles.footer, {paddingBottom: insets.bottom + 80}]}>
 				<Button text="Post review" onPress={navigateToReview} />

@@ -17,6 +17,11 @@ import ThemedText from "../components/ThemedText";
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import Lucide from "@react-native-vector-icons/lucide";
 import formatDate from "../utils/formatDate";
+import {useToast} from "../context/toastContext";
+import {logout} from "../api/auth";
+import {getUser} from "../api/users";
+import {getReviewsByUser} from "../api/reviews";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -85,82 +90,48 @@ const createStyles = (theme: ColorTheme) =>
 export default function ProfileScreen() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
+	const {dispatch: toastDispatch} = useToast();
 	const {token, user, signOut} = useAuth();
-
-	const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 	const [reviews, setReviews] = useState<Review[] | null>([]);
-
-	async function fetchUser() {
-		try {
-			const response = await fetch(`${API_URL}/api/users/user?userId=${user?.id}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
-
-			const data = await response.json();
-
-			return data as UserDetails;
-		} catch (error) {
-			console.error(error);
-			return null;
-		}
-	}
-
-	async function fetchUserReviews() {
-		try {
-			const response = await fetch(`${API_URL}/api/reviews/user?userId=${user?.id}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
-
-			const data = await response.json();
-
-			return data as Review[];
-		} catch (error) {
-			console.error(error);
-			return null;
-		}
-	}
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useFocusEffect(
 		useCallback(() => {
-			Promise.all([fetchUser(), fetchUserReviews()])
-				.then(([userData, reviewData]) => {
+			async function loadProfile() {
+				if (!user) return;
+
+				try {
+					const [userData, reviewData] = await Promise.all([
+						getUser(user.id, token),
+						getReviewsByUser(user.id, token),
+					]);
 					setUserDetails(userData);
 					setReviews(reviewData);
-				})
-				.catch(console.error);
+				} catch (error) {
+					toastDispatch({
+						type: "SHOW",
+						payload: error instanceof Error ? error.message : "Something went wrong",
+					});
+				} finally {
+					setIsLoading(false);
+				}
+			}
+
+			loadProfile();
 		}, [user?.id, token]),
 	);
 
-	async function logout() {
-		const authorization = "Bearer " + token;
-
-		const API_URL = process.env.EXPO_PUBLIC_API_URL;
+	async function logoutSession() {
 		try {
-			const response = await fetch(`${API_URL}/api/auth/logout`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `${authorization}`,
-				},
-			});
-
-			if (response.ok) {
-				await signOut();
-			} else {
-				console.error(response);
-			}
+			await logout(token);
+			await signOut();
 		} catch (error) {
-			console.error(error);
+			toastDispatch({
+				type: "SHOW",
+				payload: error instanceof Error ? error.message : "Something went wrong",
+			});
 		}
 	}
 
@@ -220,10 +191,16 @@ export default function ProfileScreen() {
 					/>
 				)}
 				ListHeaderComponent={header}
-				ListEmptyComponent={<Text style={styles.emptyText}>You haven't posted any reviews yet.</Text>}
+				ListEmptyComponent={
+					isLoading ? (
+						<LoadingIndicator />
+					) : (
+						<Text style={styles.emptyText}>You haven't posted any reviews yet...</Text>
+					)
+				}
 			/>
 			<View style={[styles.footer, {paddingBottom: insets.bottom + 80}]}>
-				<Button text="Logout" onPress={logout} />
+				<Button text="Logout" onPress={logoutSession} />
 			</View>
 		</View>
 	);

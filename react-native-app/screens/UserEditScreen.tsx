@@ -11,6 +11,8 @@ import {ColorTheme, Size} from "../constants/theme";
 import {RootStackParamList} from "../App";
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import Button from "../components/Button";
+import {updateMe} from "../api/users";
+import {useToast} from "../context/toastContext";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -49,26 +51,17 @@ export default function EditProfileScreen({route}: Props) {
 
 	const [bio, setBio] = useState(userDetails?.bio ?? "");
 
-	const API_URL = process.env.EXPO_PUBLIC_API_URL;
+	const {dispatch: toastDispatch} = useToast();
 
 	async function submit() {
 		try {
-			const response = await fetch(`${API_URL}/api/users/me`, {
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify({bio: bio}),
-			});
-
-			if (response.ok) {
-				navigationRef.goBack();
-			} else {
-				console.error(response.status, await response.text());
-			}
+			await updateMe(token, {bio});
+			navigationRef.goBack();
 		} catch (error) {
-			console.error(error);
+			toastDispatch({
+				type: "SHOW",
+				payload: error instanceof Error ? error.message : "Something went wrong",
+			});
 		}
 	}
 

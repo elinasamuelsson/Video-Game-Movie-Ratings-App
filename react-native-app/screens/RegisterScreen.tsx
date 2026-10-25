@@ -11,6 +11,8 @@ import Button from "../components/Button";
 import ThemedText from "../components/ThemedText";
 import CustomTextInput from "../components/CustomTextInput";
 import ThemedTextHeader from "../components/ThemedTextHeader";
+import {useToast} from "../context/toastContext";
+import {register} from "../api/auth";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -47,27 +49,20 @@ const createStyles = (theme: ColorTheme) =>
 export default function RegisterScreen() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
+	const {dispatch: toastDispatch} = useToast();
 
-	const [username, setUsername] = useState<String>("");
-	const [password, setPassword] = useState<String>("");
+	const [username, setUsername] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
 
 	async function submitRegisterDetails() {
 		try {
-			const response = await fetch("http://192.168.50.248:8080/api/auth/register", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({username: username, password: password}),
-			});
-
-			const data = await response.text();
-			if (response.ok) {
-				navigationRef.navigate("Login");
-			} else {
-				console.error(data);
-			}
+			await register(username, password);
+			navigationRef.navigate("Login");
 		} catch (error) {
+			toastDispatch({
+				type: "SHOW",
+				payload: error instanceof Error ? error.message : "Something went wrong.",
+			});
 			console.error(error);
 		}
 	}

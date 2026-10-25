@@ -10,6 +10,10 @@ import {Movie} from "../types/movie";
 
 import MovieCard from "../components/MovieCard";
 import Button from "../components/Button";
+import {getMovies} from "../api/movies";
+import {useToast} from "../context/toastContext";
+import LoadingIndicator from "../components/LoadingIndicator";
+import ThemedText from "../components/ThemedText";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -46,30 +50,28 @@ const createStyles = (theme: ColorTheme) =>
 export default function MoviesScreen() {
 	const [movies, setMovies] = useState<Movie[]>([]);
 	const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
-
-	const API_URL = process.env.EXPO_PUBLIC_API_URL;
+	const {dispatch: toastDispatch} = useToast();
 
 	useEffect(() => {
-		async function fetchMovies(): Promise<Movie[]> {
+		async function loadMovies() {
 			try {
-				const response = await fetch(`${API_URL}/api/movies`, {
-					method: "GET",
-					headers: {"Content-Type": "application/json"},
-				});
-
-				const data = await response.json();
-
-				return data as Movie[];
+				const data = await getMovies();
+				setMovies(data);
 			} catch (error) {
-				console.error(error);
-				return [];
+				toastDispatch({
+					type: "SHOW",
+					payload: error instanceof Error ? error.message : "Something went wrong",
+				});
+			} finally {
+				setIsLoading(false);
 			}
 		}
 
-		fetchMovies().then(setMovies).catch(console.error);
-	}, [API_URL]);
+		loadMovies();
+	}, []);
 
 	const genres = useMemo(() => [...new Set(movies.flatMap((m) => m.genres))].sort(), [movies]);
 	const filteredMovies = useMemo(
@@ -103,6 +105,13 @@ export default function MoviesScreen() {
 				data={filteredMovies}
 				keyExtractor={(movie) => movie.id}
 				renderItem={({item}) => <MovieCard movie={item} onPress={() => navigateToMovie(item)} />}
+				ListEmptyComponent={
+					isLoading ? (
+						<LoadingIndicator />
+					) : (
+						<ThemedText muted={true} bold={false} text="No movies found..." />
+					)
+				}
 			/>
 		</View>
 	);

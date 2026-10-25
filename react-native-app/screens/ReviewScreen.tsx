@@ -13,6 +13,8 @@ import ThemedTextHeader from "../components/ThemedTextHeader";
 import Button from "../components/Button";
 import ThemedText from "../components/ThemedText";
 import CustomTextInput from "../components/CustomTextInput";
+import {updateReview, createReview} from "../api/reviews";
+import {useToast} from "../context/toastContext";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -64,29 +66,29 @@ export default function ReviewFormScreen({route}: Props) {
 
 	const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
+	const {dispatch: toastDispatch} = useToast();
+
+	function showError(message: string) {
+		toastDispatch({type: "SHOW", payload: message});
+	}
+
 	async function submit() {
 		if (!title.trim() || !content.trim() || rating < 1) {
-			console.error("Title, content and rating are required.");
+			showError("Title, content and rating are required.");
 			return;
 		}
 
-		try {
-			const response = await fetch(isEdit ? `${API_URL}/api/reviews/${review.id}` : `${API_URL}/api/reviews/`, {
-				method: isEdit ? "PATCH" : "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify({movieId, title, content, rating}),
-			});
+		const data = {movieId, title: title.trim(), content: content.trim(), rating};
 
-			if (response.ok) {
-				navigationRef.goBack();
+		try {
+			if (isEdit) {
+				await updateReview(token, review.id, data);
 			} else {
-				console.error(response.status, await response.text());
+				await createReview(token, data);
 			}
+			navigationRef.goBack();
 		} catch (error) {
-			console.error(error);
+			showError(error instanceof Error ? error.message : "Something went wrong");
 		}
 	}
 

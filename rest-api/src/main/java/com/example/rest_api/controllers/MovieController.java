@@ -24,7 +24,6 @@ public class MovieController {
     @GetMapping("/movie")
     public ResponseEntity<Movie> getMovieById(@RequestParam UUID movieId) {
         Movie response = movieService.getMovieById(movieId);
-        System.out.println(response.toString());
         return ResponseEntity.ok().body(response);
     }
 }

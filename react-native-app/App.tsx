@@ -18,6 +18,7 @@ import ReviewScreen from "./screens/ReviewScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import Navbar from "./components/Navbar";
 import {UserDetails} from "./types/userDetails";
+import {ToastProvider} from "./context/toastContext";
 
 export type RootStackParamList = {
 	Home: undefined;
@@ -84,9 +85,11 @@ function Root() {
 export default function App() {
 	return (
 		<SafeAreaProvider>
-			<AuthProvider>
-				<Root />
-			</AuthProvider>
+			<ToastProvider>
+				<AuthProvider>
+					<Root />
+				</AuthProvider>
+			</ToastProvider>
 		</SafeAreaProvider>
 	);
 }

@@ -9,6 +9,10 @@ import {Review} from "../types/review";
 import {useFocusEffect} from "@react-navigation/native";
 import Lucide from "@react-native-vector-icons/lucide";
 import {navigationRef} from "../hooks/navigationRef";
+import {getMovie} from "../api/movies";
+import {useToast} from "../context/toastContext";
+import {getUser} from "../api/users";
+import {deleteReview} from "../api/reviews";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -73,21 +77,12 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 	const {token, user} = useAuth();
 	const isOwner = user?.id === review.userId;
 
-	const API_URL = process.env.EXPO_PUBLIC_API_URL;
+	const {dispatch: toastDispatch} = useToast();
 
 	async function fetchUsername() {
 		try {
-			const response = await fetch(`${API_URL}/api/users/user?userId=${review.userId}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
-
-			const data = await response.json();
-
-			return data.username;
+			const userDetails = await getUser(review.userId, token);
+			return userDetails.username;
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -96,17 +91,8 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 
 	async function fetchMovieName() {
 		try {
-			const response = await fetch(`${API_URL}/api/movies/movie?movieId=${review.movieId}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
-
-			const data = await response.json();
-
-			return data.title;
+			const movie = await getMovie(review.movieId, token);
+			return movie.title;
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -124,20 +110,15 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 		}, [token, review.userId, review.movieId]),
 	);
 
-	async function deleteReview() {
+	async function handleDelete() {
 		try {
-			const response = await fetch(`${API_URL}/api/reviews/${review.id}`, {
-				method: "DELETE",
-				headers: {Authorization: `Bearer ${token}`},
-			});
-
-			if (response.ok) {
-				onDeleted?.(review.id);
-			} else {
-				console.error(response.status, await response.text());
-			}
+			await deleteReview(token, review.id);
+			onDeleted?.(review.id);
 		} catch (error) {
-			console.error(error);
+			toastDispatch({
+				type: "SHOW",
+				payload: error instanceof Error ? error.message : "Something went wrong",
+			});
 		}
 	}
 
@@ -168,7 +149,7 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 						<Pressable onPress={navigateToReview}>
 							<Lucide name="pen-line" style={styles.actionIcon} />
 						</Pressable>
-						<Pressable onPress={deleteReview}>
+						<Pressable onPress={handleDelete}>
 							<Lucide name="trash-2" style={styles.actionIcon} />
 						</Pressable>
 					</View>

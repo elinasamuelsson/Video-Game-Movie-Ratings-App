@@ -12,6 +12,8 @@ import Button from "../components/Button";
 import ThemedText from "../components/ThemedText";
 import CustomTextInput from "../components/CustomTextInput";
 import ThemedTextHeader from "../components/ThemedTextHeader";
+import {useToast} from "../context/toastContext";
+import {login} from "../api/auth";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -49,37 +51,22 @@ export default function LoginScreen() {
 	const styles = useThemedStyles(createStyles);
 	const insets = useSafeAreaInsets();
 	const {signIn} = useAuth();
+	const {dispatch: toastDispatch} = useToast();
 
-	const [username, setUsername] = useState<String>("");
-	const [password, setPassword] = useState<String>("");
+	const [username, setUsername] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
 
 	const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 	async function submitLoginDetails() {
 		try {
-			const response = await fetch(`${API_URL}/api/auth/session`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({username: username, password: password}),
-			});
-
-			const data = await response.text();
-			if (response.ok && data) {
-				const meResponse = await fetch(`${API_URL}/api/users/me`, {
-					headers: {Authorization: `Bearer ${data}`},
-				});
-				const user = await meResponse.json();
-				console.log(meResponse);
-				console.log(user);
-
-				await signIn(data, user);
-			} else {
-				console.error(data);
-			}
+			const {token, user} = await login(username, password);
+			await signIn(token, user);
 		} catch (error) {
-			console.error(error);
+			toastDispatch({
+				type: "SHOW",
+				payload: error instanceof Error ? error.message : "Something went wrong.",
+			});
 		}
 	}
 
