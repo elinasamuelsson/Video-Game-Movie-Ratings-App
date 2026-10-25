@@ -1,6 +1,6 @@
 import {useCallback, useState} from "react";
 
-import {FlatList, StyleSheet, Text, View} from "react-native";
+import {FlatList, Share, StyleSheet, Text, View} from "react-native";
 import {useFocusEffect} from "@react-navigation/native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {NativeStackScreenProps} from "@react-navigation/native-stack";
@@ -116,6 +116,20 @@ export default function MovieScreen({route}: Props) {
 		navigationRef.navigate("Review", {movieId: `${movie.id}`, review: undefined});
 	}
 
+	async function shareMovie() {
+		try {
+			const rating = averageRating !== null ? ` (★ ${averageRating.toFixed(1)}/5)` : "";
+			await Share.share({
+				message: `Check out "${movie.title}"${rating}\n\n${movie.plot}`,
+			});
+		} catch (error) {
+			toastDispatch({
+				type: "SHOW",
+				payload: error instanceof Error ? error.message : "Could not share movie",
+			});
+		}
+	}
+
 	function formatRuntime(totalSeconds: number): string {
 		const hours = Math.floor(totalSeconds / 3600);
 		const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -188,7 +202,8 @@ export default function MovieScreen({route}: Props) {
 			/>
 			<View style={[styles.footer, {paddingBottom: insets.bottom + 80}]}>
 				<Button text="Post review" onPress={navigateToReview} />
-				<Button text="Back to movies" onPress={navigateToMovies} />
+				<Button text="Share movie" onPress={shareMovie} />
+				<Button text="Go back" onPress={navigateToMovies} />
 			</View>
 		</View>
 	);
