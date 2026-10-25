@@ -65,8 +65,6 @@ export default function ReviewFormScreen({route}: Props) {
 	const [content, setContent] = useState(review?.content ?? "");
 	const [rating, setRating] = useState(review?.rating ?? 0);
 
-	const API_URL = process.env.EXPO_PUBLIC_API_URL;
-
 	const {dispatch: toastDispatch} = useToast();
 
 	function showError(message: string) {
@@ -90,6 +88,11 @@ export default function ReviewFormScreen({route}: Props) {
 			navigationRef.goBack();
 		} catch (error) {
 			showError(error instanceof Error ? error.message : "Something went wrong");
+		} finally {
+			toastDispatch({
+				type: "SHOW",
+				payload: "Success.",
+			});
 		}
 	}
 

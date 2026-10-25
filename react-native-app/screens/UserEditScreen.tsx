@@ -63,6 +63,11 @@ export default function EditProfileScreen({route}: Props) {
 				type: "SHOW",
 				payload: error instanceof Error ? error.message : "Something went wrong",
 			});
+		} finally {
+			toastDispatch({
+				type: "SHOW",
+				payload: "Bio has been updated.",
+			});
 		}
 	}
 

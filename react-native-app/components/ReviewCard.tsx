@@ -120,6 +120,11 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 				type: "SHOW",
 				payload: error instanceof Error ? error.message : "Something went wrong",
 			});
+		} finally {
+			toastDispatch({
+				type: "SHOW",
+				payload: "Review has been deleted.",
+			});
 		}
 	}
 
