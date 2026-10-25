@@ -8,6 +8,7 @@ import {ColorTheme, Size} from "../constants/theme";
 import {Review} from "../types/review";
 import {useFocusEffect} from "@react-navigation/native";
 import Lucide from "@react-native-vector-icons/lucide";
+import {navigationRef} from "../hooks/navigationRef";
 
 const createStyles = (theme: ColorTheme) =>
 	StyleSheet.create({
@@ -140,6 +141,10 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 		}
 	}
 
+	function navigateToReview() {
+		navigationRef.navigate("Review", {movieId: `${review.movieId}`, review: review});
+	}
+
 	return (
 		<View style={styles.card}>
 			<View style={styles.header}>
@@ -160,7 +165,7 @@ export default function ReviewCard({review, onDeleted}: ReviewCardProps) {
 
 				{isOwner && (
 					<View style={styles.actionsWrapper}>
-						<Pressable>
+						<Pressable onPress={navigateToReview}>
 							<Lucide name="pen-line" style={styles.actionIcon} />
 						</Pressable>
 						<Pressable onPress={deleteReview}>

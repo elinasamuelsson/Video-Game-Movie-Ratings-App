@@ -22,9 +22,16 @@ type TextInputProps = {
 	placeholderColor: string;
 	password: boolean;
 	onChangeText: (text: string) => void;
+	value?: string;
 };
 
-export default function CustomTextInput({placeholder, placeholderColor, password, onChangeText}: TextInputProps) {
+export default function CustomTextInput({
+	placeholder,
+	placeholderColor,
+	password,
+	onChangeText,
+	value,
+}: TextInputProps) {
 	const styles = useThemedStyles(createStyles);
 
 	return (
@@ -33,6 +40,7 @@ export default function CustomTextInput({placeholder, placeholderColor, password
 			placeholderTextColor={placeholderColor}
 			secureTextEntry={password}
 			onChangeText={onChangeText}
+			value={value}
 			style={styles.textInput}
 		/>
 	);

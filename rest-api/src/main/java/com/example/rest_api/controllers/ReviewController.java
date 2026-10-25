@@ -40,5 +40,11 @@ public class ReviewController {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok().build();
     }
+    @PatchMapping("/{reviewId}")
+    public ResponseEntity<Void> updateReview(@PathVariable UUID reviewId, @RequestBody ReviewRequest reviewRequest) {
+        reviewService.updateReview(reviewId, reviewRequest);
+        return ResponseEntity.ok().build();
+    }
+
 }
 

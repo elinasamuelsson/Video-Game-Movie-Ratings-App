@@ -71,7 +71,7 @@ export default function ReviewFormScreen({route}: Props) {
 		}
 
 		try {
-			const response = await fetch(isEdit ? `${API_URL}/api/reviews/${review.id}` : `${API_URL}/api/reviews`, {
+			const response = await fetch(isEdit ? `${API_URL}/api/reviews/${review.id}` : `${API_URL}/api/reviews/`, {
 				method: isEdit ? "PATCH" : "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -95,7 +95,13 @@ export default function ReviewFormScreen({route}: Props) {
 			<ThemedTextHeader text={isEdit ? "Edit review" : "Write a review"} />
 
 			<View style={styles.containerInner}>
-				<CustomTextInput placeholder="Title" placeholderColor="grey" password={false} onChangeText={setTitle} />
+				<CustomTextInput
+					placeholder="Title"
+					placeholderColor="grey"
+					password={false}
+					value={title}
+					onChangeText={setTitle}
+				/>
 				<TextInput
 					style={[styles.multilineInput]}
 					placeholder="Type your review..."

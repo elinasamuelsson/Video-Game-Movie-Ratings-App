@@ -36,4 +36,20 @@ public class ReviewService {
     public void deleteReview(UUID reviewId) {
         reviewRepository.deleteById(reviewId);
     }
+
+    public void updateReview(UUID reviewId, ReviewRequest request) {
+        Review review = reviewRepository.findById(reviewId).get();
+
+        if (request.title() != null) {
+            review.setTitle(request.title());
+        }
+        if (request.content() != null) {
+            review.setContent(request.content());
+        }
+        if (request.rating() != null) {
+            review.setRating(request.rating());
+        }
+
+        reviewRepository.save(review);
+    }
 }
