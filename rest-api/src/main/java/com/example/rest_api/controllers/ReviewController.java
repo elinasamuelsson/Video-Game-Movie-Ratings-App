@@ -26,7 +26,6 @@ public class ReviewController {
     @GetMapping("/user")
     public ResponseEntity<List<Review>> getAllReviewsForUser(@RequestParam UUID userId) {
         List<Review> response = reviewService.getAllReviewsForUser(userId);
-        System.out.println(response.toString());
         return ResponseEntity.ok().body(response);
     }
 
@@ -36,8 +35,8 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping()
-    public ResponseEntity<Void> deleteReview(@RequestParam UUID reviewId) {
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReview(@PathVariable UUID reviewId) {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok().build();
     }

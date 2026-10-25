@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useCallback, useState} from "react";
 
 import {FlatList, StyleSheet, Text, View} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
@@ -26,6 +26,9 @@ const createStyles = (theme: ColorTheme) =>
 		},
 		list: {
 			flex: 1,
+			width: "100%",
+			maxWidth: 450,
+			alignSelf: "center",
 			paddingHorizontal: Size.medium,
 		},
 		containerTopRow: {
@@ -152,9 +155,11 @@ export default function MovieScreen({route}: Props) {
 		}
 	}
 
-	useFocusEffect(() => {
-		fetchReviews().then(setReviews).catch(console.error);
-	});
+	useFocusEffect(
+		useCallback(() => {
+			fetchReviews().then(setReviews).catch(console.error);
+		}, [movie.id]),
+	);
 
 	function navigateToMovies() {
 		navigationRef.navigate("Movies");
@@ -180,7 +185,7 @@ export default function MovieScreen({route}: Props) {
 	const averageRating = getAverageRating(reviews);
 
 	const header = (
-		<View>
+		<View style={styles.containerOuter}>
 			<ThemedTextHeader text={movie.title} />
 			<View style={styles.containerTopRow}>
 				<View style={styles.poster}>
@@ -223,7 +228,12 @@ export default function MovieScreen({route}: Props) {
 				style={styles.list}
 				data={reviews}
 				keyExtractor={(review) => review.id}
-				renderItem={({item}) => <ReviewCard review={item} />}
+				renderItem={({item}) => (
+					<ReviewCard
+						review={item}
+						onDeleted={(id) => setReviews((prev) => prev.filter((r) => r.id !== id))}
+					/>
+				)}
 				ListHeaderComponent={header}
 				ListEmptyComponent={<Text style={styles.emptyText}>No reviews yet.</Text>}
 			/>

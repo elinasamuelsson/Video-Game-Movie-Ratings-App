@@ -16,6 +16,7 @@ const createStyles = (theme: ColorTheme) =>
 		container: {
 			backgroundColor: theme.background,
 			flex: 1,
+			alignItems: "center",
 			paddingHorizontal: Size.medium,
 		},
 		genreList: {

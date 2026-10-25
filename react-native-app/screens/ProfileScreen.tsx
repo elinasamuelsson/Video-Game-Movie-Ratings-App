@@ -16,7 +16,6 @@ import ReviewCard from "../components/ReviewCard";
 import ThemedText from "../components/ThemedText";
 import ThemedTextHeader from "../components/ThemedTextHeader";
 import Lucide from "@react-native-vector-icons/lucide";
-import {User} from "../types/user";
 import formatDate from "../utils/formatDate";
 
 const createStyles = (theme: ColorTheme) =>
@@ -26,6 +25,10 @@ const createStyles = (theme: ColorTheme) =>
 			flex: 1,
 		},
 		list: {
+			flex: 1,
+			width: "100%",
+			maxWidth: 450,
+			alignSelf: "center",
 			paddingHorizontal: Size.medium,
 		},
 		profileTop: {
@@ -50,7 +53,7 @@ const createStyles = (theme: ColorTheme) =>
 			marginLeft: Size.medium,
 		},
 		bio: {
-			marginBottom: Size.medium,
+			marginBottom: Size.xLarge,
 			justifyContent: "center",
 		},
 		bioHeader: {
@@ -210,7 +213,12 @@ export default function ProfileScreen() {
 				style={styles.list}
 				data={reviews}
 				keyExtractor={(review) => review.id}
-				renderItem={({item}) => <ReviewCard review={item} />}
+				renderItem={({item}) => (
+					<ReviewCard
+						review={item}
+						onDeleted={(id) => setReviews((prev) => prev?.filter((r) => r.id !== id) ?? null)}
+					/>
+				)}
 				ListHeaderComponent={header}
 				ListEmptyComponent={<Text style={styles.emptyText}>You haven't posted any reviews yet.</Text>}
 			/>
